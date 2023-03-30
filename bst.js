@@ -4,6 +4,8 @@ import node from './node.js'
 export  function tree(arr) {
     let sorted = sortAndDup(arr)
     let root = arrayToBST(sorted, 0, sorted.length - 1)
+
+    
     let preOrdered = () => {
         return preOrder(root)
     }
@@ -13,8 +15,13 @@ export  function tree(arr) {
     let postOrdered = () => {
         return postOrder(root)
     }
-        
-
+    function giveRoot() {
+        return root
+    }
+    function reBalance() {
+        let newRoot = inOrdered()
+        return root = arrayToBST(newRoot, 0, newRoot.length - 1)
+    }
     function arrayToBST(arr, start, end) {
         if (start > end) return null
         let mid = Math.floor((start+end)/2)
@@ -51,7 +58,7 @@ export  function tree(arr) {
     }
     function postOrder(node) {
         if (node === null) return
-        let arr = [ postOrder(node.left), postOrder(node.right), node.val].flatMap(num => {
+        let arr = [postOrder(node.left), postOrder(node.right), node.val].flatMap(num => {
             if (num === undefined) return null
             else return num
         })
@@ -72,17 +79,79 @@ export  function tree(arr) {
         }
         if (prev.val > value) prev.left = newNode
         else if (prev.val < value) prev.right = newNode
-        preOrdered = preOrder(root)
-        inOrdered = inOrder(root)
-        postOrdered = postOrder(root)
+    }
+    function deleteNode(root, value) {
+        if (root === null) return root
+        if (root.val > value) {
+            root.left = deleteNode(root.left, value)
+            return root
+        } else if (root.val < value) {
+            root.right = deleteNode(root.right, value)
+            return root
+        }
+        if (root.left === null) {
+            let temp = root.right
+            return temp
+        } else if (root.right === null) {
+            let temp = root.left
+            return temp
+        } else {
+            let parent = root
+            let succ = root.right
+            while (succ.left !== null) {
+                parent = succ
+                succ = succ.left
+            }
+            if (parent != root) {
+                parent.left = succ.right
+            } else {
+                parent.right = succ.right
+            }
+            root.val = succ.val
+            return root
+        }
+    }
+    function find(value) {
+        let temp = giveRoot()
+        if (temp === null) return
+        while (temp !== null) {
+            if (temp.val === value) return temp
+            else if (temp.val > value) temp = temp.left
+            else if (temp.val < value) temp = temp.right
+        }
+    }
+    function levelOrder(func=null) {
+        let temp = giveRoot()
+        let q = []
+        let result = []
+        let count = 0
+        if (func === null) {
+            if (temp === null) return
+            q.push(temp)
+            while (q.length > 0) {
+                let current = q[0]
+                result[count++] = current.val
+                if (current.left != null) q.push(current.left)
+                if (current.right != null) q.push(current.right)
+                q.shift()
+            }   
+        }
+        return result
+    }
+    function height(n) {
+        if (n === null) return
+        
     }
     return {
-        root,
-        sorted,
+        giveRoot,
         preOrdered,
         inOrdered,
         postOrdered,
-        insert
+        insert,
+        reBalance,
+        deleteNode,
+        find,
+        levelOrder
     }
 }
 
