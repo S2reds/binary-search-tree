@@ -5,7 +5,9 @@ export  function tree(arr) {
     let sorted = sortAndDup(arr)
     let root = arrayToBST(sorted, 0, sorted.length - 1)
 
-    
+    let sort = () => {
+        return sortAndDup(arr)
+    }
     let preOrdered = () => {
         return preOrder(root)
     }
@@ -38,7 +40,7 @@ export  function tree(arr) {
             if (!acc.includes(curr)) acc.push(curr)
             return acc
         }, [])
-        return dup.sort()
+        return dup.sort((a, b) => a - b)
     }
     function preOrder(node) {
         if (node === null) return
@@ -189,7 +191,9 @@ export  function tree(arr) {
         levelOrder,
         height,
         depth,
-        isBalanced
+        isBalanced,
+        sorted,
+        sort
     }
 }
 
