@@ -139,8 +139,43 @@ export  function tree(arr) {
         return result
     }
     function height(n) {
-        if (n === null) return
-        
+        if (n === null) return 0;
+        const left = height(n.left)
+        const right = height(n.right)
+        return Math.max(left, right) + 1
+    }
+    function depth(root,n) {
+        if (root === null) return -1  
+        if (n.val === root.val) return 0
+        let count = 0
+        let currentNode = root
+        while (currentNode) {
+            if (currentNode.val === n.val) {
+              return count;
+            } else if (currentNode.val > n.val) {
+              currentNode = currentNode.left;
+            } else {
+              currentNode = currentNode.right;
+            }
+            count++;
+          }
+        return count
+    }
+    function isBalanced() {
+        let root = giveRoot()
+        let left = root.left
+        let right = root.right
+        let lheight = height(left)
+        let rheight = height(right)
+        if (lheight > rheight) {
+            let diff = lheight - rheight
+            return (diff > 1) ? false : true;
+        } else if (rheight > lheight) {
+            let diff = rheight - lheight
+            return (diff > 1) ? false : true;
+        } else if (lheight === rheight) {
+            return true
+        }
     }
     return {
         giveRoot,
@@ -151,7 +186,10 @@ export  function tree(arr) {
         reBalance,
         deleteNode,
         find,
-        levelOrder
+        levelOrder,
+        height,
+        depth,
+        isBalanced
     }
 }
 
